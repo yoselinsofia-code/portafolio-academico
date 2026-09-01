@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="es">
+<head>
+    <title>Dashboard · Portafolio Académico</title>
+    <th:block th:replace="~{layout/admin :: styles}"></th:block>
+</head>
+<body>
+<div class="app-layout">
+
+    <div th:replace="~{layout/admin :: sidebar(activePage='dashboard')}"></div>
+
+    <main class="main-content">
+        <div th:replace="~{layout/admin :: topbar(titulo='Panel de control', subtitulo='Resumen general de tu portafolio académico')}"></div>
+
+        <div class="stats-grid">
+            <div class="stat-card c1">
+                <div class="stat-icon"><i class="fa-solid fa-calendar-week"></i></div>
+                <div class="stat-value" th:text="${totalSemanas}">0</div>
+                <div class="stat-label">Semanas</div>
+            </div>
+            <div class="stat-card c2">
+                <div class="stat-icon"><i class="fa-solid fa-list-check"></i></div>
+                <div class="stat-value" th:text="${totalActividades}">0</div>
+                <div class="stat-label">Actividades</div>
+            </div>
+            <div class="stat-card c3">
+                <div class="stat-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="stat-value" th:text="${actividadesPublicadas}">0</div>
+                <div class="stat-label">Publicadas</div>
+            </div>
+            <div class="stat-card c4">
+                <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                <div class="stat-value" th:text="${actividadesPendientes}">0</div>
+                <div class="stat-label">Pendientes</div>
+            </div>
+        </div>
+
+        <div class="dashboard-grid-2">
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-calendar-days"></i> Últimas semanas</h3>
+                    <a th:href="@{/admin/semanas}" class="btn-elegante btn-secundario">Ver todas</a>
+                </div>
+                <div th:if="${#lists.isEmpty(ultimasSemanas)}" class="empty-state">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <p>Aún no has agregado ninguna semana.</p>
+                </div>
+                <div th:each="semana : ${ultimasSemanas}" class="mini-list-item">
+                    <div class="mini-thumb">
+                        <img th:if="${semana.imagenPortada != null}" th:src="@{'/uploads/' + ${semana.imagenPortada}}" alt=""/>
+                        <i th:unless="${semana.imagenPortada != null}" class="fa-solid fa-book"></i>
+                    </div>
+                    <div class="mini-info">
+                        <strong th:text="'Semana ' + ${semana.numeroSemana} + ' · ' + ${semana.titulo}">Semana</strong>
+                        <span th:text="${semana.estado.etiqueta}">Estado</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h3><i class="fa-solid fa-list-check"></i> Últimas actividades</h3>
+                </div>
+                <div th:if="${#lists.isEmpty(ultimasActividades)}" class="empty-state">
+                    <i class="fa-solid fa-inbox"></i>
+                    <p>Aún no has agregado ninguna actividad.</p>
+                </div>
+                <div th:each="actividad : ${ultimasActividades}" class="mini-list-item">
+                    <div class="mini-thumb">
+                        <img th:if="${actividad.imagen != null}" th:src="@{'/uploads/' + ${actividad.imagen}}" alt=""/>
+                        <i th:unless="${actividad.imagen != null}" class="fa-solid fa-code"></i>
+                    </div>
+                    <div class="mini-info">
+                        <strong th:text="${actividad.titulo}">Actividad</strong>
+                        <span th:text="${actividad.tipoActividad.etiqueta} + ' · ' + ${actividad.estado.etiqueta}">Tipo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:replace="~{layout/admin :: scripts}"></th:block>
+</body>
+</html>
